@@ -128,14 +128,13 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-off
 <div class="app">
   <div class="top">
     <button class="day" id="day" type="button" aria-haspopup="dialog"></button>
-    <button class="back" id="back" type="button" hidden></button>
   </div>
   <section class="hero" id="hero">
     <div class="plate" id="plate">
       <img id="photo" alt="">
       <div class="sides" id="sides" aria-hidden="true"></div>
     </div>
-    <div class="head"><h1 class="name" id="name"></h1><div class="with" id="with"></div><div class="veg" id="veg" hidden></div></div>
+    <div class="head"><h1 class="name" id="name"></h1><div class="with" id="with"></div></div>
   </section>
   <main class="recipe" id="recipe">
     <ul class="ing" id="ing"></ul>
@@ -2583,7 +2582,7 @@ function render(){
   document.documentElement.lang = lang;
   $("fab").setAttribute("aria-label", t.another);
   $("day").setAttribute("aria-label", t.week);
-  $("back").textContent = "← " + t.back; $("back").hidden = (dayIdx === todayIdx && meal === nowMeal);
+
   if (!list){
     $("day").innerHTML = "<b></b>" + CHEV; $("day").firstChild.textContent = t.days[dayIdx];
     $("hero").hidden = true; $("recipe").hidden = true; $("fab").hidden = true; $("off").hidden = false;
@@ -2598,8 +2597,7 @@ function render(){
   $("photo").hidden = !src; if (src){ $("photo").src = src; $("photo").alt = en ? d.en : d.hi; }
   var old = $("plate").querySelector(".ph"); if (old) old.remove();
   if (!src){ var ph = document.createElement("div"); ph.className = "ph"; ph.textContent = d.ing[0][0]; $("plate").appendChild(ph); }
-  var vg = VEG[id]; $("veg").hidden = !vg;
-  if (vg){ $("veg").innerHTML = "<b></b> "; $("veg").firstChild.textContent = en ? "Veg:" : "शाकाहारी:"; $("veg").appendChild(document.createTextNode(en ? vg[1] : vg[0])); }
+
   $("video").href = ytLink((en ? d.en : d.hi) + t.yt);
   $("video").target = IS_ANDROID ? "_self" : "_blank";
   $("vT").textContent = t.vT; $("vS").textContent = t.vS;
@@ -2684,7 +2682,7 @@ function openWeek(){
 }
 function closeWeek(){ $("week").hidden = true; document.body.style.overflow = ""; $("day").focus(); }
 $("day").addEventListener("click", openWeek);
-$("back").addEventListener("click", function(){ dayIdx = todayIdx; meal = nowMeal; list = WEEK[dayIdx] ? WEEK[dayIdx][meal] : null; idx = 0; render(); window.scrollTo(0, 0); });
+
 $("wkClose").addEventListener("click", closeWeek);
 document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !$("week").hidden) closeWeek(); });
 render();
