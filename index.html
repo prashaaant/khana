@@ -1785,6 +1785,16 @@ var list = WEEK[dayIdx] ? WEEK[dayIdx][meal] : null;
 var idx = 0;
 var $ = function(id){ return document.getElementById(id); };
 
+/* YouTube: open the app when it is installed.
+   Android: an intent link opens the YouTube app, or falls back to the website if the app is missing.
+   iPhone: youtube.com links open the app automatically when installed (universal link), else Safari. */
+var IS_ANDROID = /Android/i.test(navigator.userAgent);
+function ytLink(q){
+  var web = "https://www.youtube.com/results?search_query=" + encodeURIComponent(q);
+  if (!IS_ANDROID) return web;
+  return "intent://www.youtube.com/results?search_query=" + encodeURIComponent(q) +
+    "#Intent;scheme=https;package=com.google.android.youtube;S.browser_fallback_url=" + encodeURIComponent(web) + ";end";
+}
 function render(){
   var t = T[lang], en = lang === "en";
   document.documentElement.lang = lang;
@@ -1802,7 +1812,8 @@ function render(){
   var id = list[idx][0], extras = list[idx][1] || [], d = DISHES[id];
   var combo = COMBOS[id + "--" + extras.join("-")];   /* one thali photo with the side items on it */
   $("photo").src = combo || PHOTOS[id]; $("photo").alt = en ? d.en : d.hi;
-  $("video").href = "https://www.youtube.com/results?search_query=" + encodeURIComponent((en ? d.en : d.hi) + t.yt);
+  $("video").href = ytLink((en ? d.en : d.hi) + t.yt);
+  $("video").target = IS_ANDROID ? "_self" : "_blank";
   $("vT").textContent = t.vT; $("vS").textContent = t.vS;
   $("name").textContent = en ? d.en : d.hi;
   $("with").innerHTML = ""; $("with").hidden = !extras.length;
